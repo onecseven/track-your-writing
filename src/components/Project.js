@@ -1,6 +1,11 @@
-class Calendar {
-  constructor(date) {
-    this.year = date.getFullYear()
+export default class Calendar {
+  /** @description generates a calendar given a name. it starts on $currentYear
+   * @param {string} name the project's name
+   */
+  constructor(name) {
+    this.name = name
+    this.date = new Date()
+    this.year = this.date.getFullYear()
     this.calendar = {}
     this.calendar[this.year] = Array(12)
     for (let i = 0; i < this.calendar[this.year].length; i++) {
@@ -18,38 +23,41 @@ class Calendar {
       }
     }
   }
+  /** @description generates a calendar given a name. it starts on $currentYear
+   * @param {number} month starts at 0
+   * @param {number} day starts at 0
+   * @param {string} value what you want to store 
+   */
   addToDate(month, day, value) {
-    month = Number(month) - 1
+    month = Number(month) 
     day = Number(day)
     this.calendar[this.year][month][day] = value
     return
   }
+  /** @description takes in a month, return a function that takes a day, returns a function that writes to that day
+   * @param {number} month the month starting at 0.
+   * @return {Function} function that takes in a day
+   */
+  curryAddToDate(month) {
+    return day => {
+      return value => {
+        this.addToDate(month, day, value)
+      }
+    }
+  }
+
   getMonth(month) {
-    month = Number(month) - 1
+    month = Number(month)
     return this.calendar[this.year][month]
   }
   getDay(month, day) {
-    month = Number(month) - 1
+      /** @description 
+   * @param {number} month the month starting at 0.
+   * @param {number} day the month starting at 0.
+  * @return {string} 
+   */
+    month = Number(month)
     day = Number(day)
     return this.calendar[this.year][month][day]
-  }
-
-}
-
-export default class Project {
-  constructor(name) {
-    this.name = name
-    this.date = new Date()
-    this.year = this.date.getFullYear()
-    this.calendar = new Calendar(this.date)
-  }
-  getCurrentMonth(){
-    let da = new Date()
-    let month = da.getMonth()
-    this.currentMonth = month
-    return this.calendar.getMonth(month)
-  }
-  addToDate(day, value){
-    this.calendar.addToDate(this.currentMonth, day, value)
   }
 }

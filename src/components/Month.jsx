@@ -1,20 +1,30 @@
 import React, { Component } from "react"
 
-const Month = ({ month }) => {
-  return (
-    <div>
-      {month.map((elem, index) => {
-        let check = "x"
-        if (elem !== null) {
-          check = "y"
-        }
-        return (<div>
-          <span>{index}</span>
-          {check}
-        </div>)
-      })}
-    </div>
-  )
+/*
+        <Draft title=/>
+*/
+
+class Month extends Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <div className="container">
+        <h1>Month</h1>
+        <br/>
+        {this.props.month.map((elem, index) => {
+          return (
+            <div key={index} className="calendarBox" onClick={() => {
+              this.props.edit(new Date().getMonth(), index)}}>
+              {+index+1}
+              {elem !== null ? "y" : "x"}
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
 }
 
 export default Month

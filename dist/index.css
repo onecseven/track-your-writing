@@ -1,11 +1,26 @@
 * {
   box-sizing: border-box;
- }
- #content {
+}
+#content {
   width: 480px;
   margin: 0 auto;
- }
- .editor {
+}
+.editor {
   border: 1px solid grey;
   padding: 6px;
- }npm install --save draft-js
+}
+.container{
+  margin: 100px 200px 200px 200px;
+  display:grid;
+  grid-template-columns: 200px 200px 200px 200px;
+
+}
+.calendarBox {
+  background-color: lightBlue;
+  height: 50px;
+  padding-top: 15px;
+  text-align: center;
+  display: grid;
+  cursor: pointer;
+  margin: 2px;
+}
