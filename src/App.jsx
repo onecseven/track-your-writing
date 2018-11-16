@@ -36,6 +36,7 @@ class App extends Component {
       <div className="App">
       <div>
       <button onClick={() => {
+        this.current = null;
         this.setState({view: "month"})
       }}>{"<-"}</button>
       </div>
