@@ -1,0 +1,14 @@
+{
+  "name": "Keep Track",
+  "version": "0.1",
+  "description": "Keep track of your writing!",
+  "permissions": ["storage"],
+  "background": {
+    "scripts": ["init.js"],
+    "persistent": false
+  },
+  "chrome_url_overrides" : {
+    "newtab": "index.html"
+  },
+  "manifest_version": 2
+}

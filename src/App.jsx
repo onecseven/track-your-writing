@@ -1,3 +1,5 @@
+/* global chrome */
+
 import React, { Component } from "react"
 import Month from "./components/Month"
 import Year from "./components/Year"
@@ -8,39 +10,87 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      /**
-       * @type {view} can be 'month', 'year', or 'edit'
-       */
       view: "month",
+      calendar: null,
+      month: new Date().getMonth()
     }
-    this.writing = new Calendar("FUNDIO")
-    this.writing.addToDate(10,10, 'hi')
     this.edit = this.edit.bind(this)
-    this.genRender = this.genRender.bind(this)
-    this.current = null;
+    this.getProject = this.getProject.bind(this)
+    this.chromeSave = this.chromeSave.bind(this)
+    this.current = null
+    this.buttons = (
+      <div className="button-container">
+      <div className="calendarButton"
+        onClick={() => {
+          let newM = this.state.month - 1
+          this.setState({ month: newM })
+        }}
+      >
+        <span>{"<"}</span>
+      </div> 
+      <div className="calendarButton"
+        onClick={() => {
+          let newM = this.state.month + 1
+          this.setState({ month: newM })
+        }}
+      >
+        <span>{">"}</span>
+      </div>
+      </div>)
+    this.getProject()
   }
-  edit(month, day){
-    this.setState({view: "edit"})
-    let value = this.writing.getDay(month, day)
-    this.current = (<Draft value={value} save={this.writing.curryAddToDate(month)(day)} date={`${+month+1}/${+day+1}`}/>)
+  chromeSave() {
+    chrome.storage.local.set({ KTProject: this.state.calendar.export() })
   }
-  genRender(){
-    if (this.state.view === 'month'){
-      return (<Month month={this.writing.getMonth(new Date().getMonth())} edit={this.edit}/>)
-    } else if (this.state.view === 'edit'){
-      return (this.current)
-    }
+  edit(month, day) {
+    this.setState({ view: "edit" })
+    let value = this.state.calendar.getDay(month, day)
+    this.current = (
+      <Draft
+        chromeSave={this.chromeSave}
+        value={value}
+        save={this.state.calendar.curryAddToDate(month)(day)}
+        date={`${+month + 1}/${+day + 1}`}
+      />
+    )
+  }
+  getProject() {
+    chrome.storage.local.get(["KTProject"], result => {
+      if (result.KTProject) {
+        let temp = new Calendar("KTProject")
+        let cal = temp.import(result.KTProject)
+        this.setState({ calendar: cal })
+      } else if (!result.KTProject) {
+        this.setState({ calendar: new Calendar("KTProject") })
+      }
+    })
   }
   render() {
+    if (!this.state.calendar) {
+      return null
+    }
     return (
       <div className="App">
-      <div>
-      <button onClick={() => {
-        this.current = null;
-        this.setState({view: "month"})
-      }}>{"<-"}</button>
-      </div>
-      {this.genRender()}
+        <div>
+        {this.state.view === "edit" ? (
+        <div 
+            className="calendarButton"
+            onClick={() => {
+              this.current = null
+              this.setState({ view: "month" })
+            }}>
+            <span>{"<-"}</span>
+          </div>) : null}
+        </div>
+        {this.state.view === "month" ? (
+          <Month
+            month={this.state.calendar.getMonth(this.state.month)}
+            buttons={this.buttons}
+            mindex={this.state.month}
+            edit={this.edit}
+          />
+        ) : null}
+        {this.state.view === "edit" ? this.current : null}
       </div>
     )
   }

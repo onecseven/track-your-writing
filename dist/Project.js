@@ -60,20 +60,4 @@ export default class Calendar {
     day = Number(day)
     return this.calendar[this.year][month][day]
   }
-  export(){
-    let temp = {
-      name: this.name,
-      date: this.date,
-      calendar: this.calendar      
-    }
-    return JSON.stringify(temp)
-  }
-  import(str){
-    let parsed = JSON.parse(str)
-    let cal = new Calendar(parsed.name)
-    cal.date = new Date(parsed.date)
-    cal.calendar = parsed.calendar
-    console.log('import all good', cal)
-    return cal
-  }
 }
